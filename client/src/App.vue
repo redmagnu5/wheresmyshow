@@ -2,26 +2,48 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-model="message" placeholder="Search movies, tv shows, films..">
+      <input v-on:keyup.enter="Search" v-model="message" placeholder="Search Movies, TV, Film..">
     </div>
-    <child :msg= "message" :url="url"/>
+    <p>{{ theData }}</p>
   </div>
 </template>
 
 <script>
-import child from './components/child.vue'
+//import child from './components/child.vue'
 let baseURL = 'https://api.themoviedb.org/3/';
+let APIKEY = "45d8067615f09095c8d918479844088c";
 
 export default {
   name: 'App',
   components: {
-    child
+    //child
   },
 
   data() {
     return {
       message: "",
+      //export search data to child components
+      searchData: "",
       url: baseURL,
+    }
+  },
+  methods: {
+    Search: function runsearch() {
+      let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.message);
+      return fetch(url)
+      .then((response) => response.json())
+      .then((responseData) => {
+        var responseString = JSON.stringify(responseData, null, 4);
+        this.searchData = responseString;
+        //Successfully returning searchdata into instance variable, no need for next line
+        document.getElementById('output').innerHTML = JSON.stringify(responseString, null, 4);
+      })
+      .catch(error => console.warn(error));
+    }
+  },
+  computed: {
+    theData: function() {
+      return this.searchData;
     }
   }
 }

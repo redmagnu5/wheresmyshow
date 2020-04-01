@@ -10,7 +10,7 @@
 let APIKEY = "45d8067615f09095c8d918479844088c";
 let configData = null;
 let baseImageURL = null;
-let showData = "";
+let searchData = "";
 
 /*
 let getConfig = function (input) {
@@ -32,18 +32,16 @@ let getConfig = function (input) {
 }
 */
 
-let runSearch = function (keyword, baseURL) {
-    let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', keyword);
-    fetch(url)
-    .then(result=>result.json())
-    .then((data)=>{
-        console.log(data);
-        //process the returned data
-
-        document.getElementById('output').innerHTML = JSON.stringify(data, null, 4);
-        //work with results array...
-
-    })
+function runsearch(keyword, baseURL) {
+  let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', keyword);
+  return fetch(url)
+  .then((response) => response.json())
+  .then((responseData) => {
+    console.log(responseData);
+    document.getElementById('output').innerHTML = JSON.stringify(responseData, null, 4);
+    return responseData;
+  })
+  .catch(error => console.warn(error));
 }
 
 export default {
@@ -58,11 +56,16 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      searchData: "",
+    }
+  },
   computed: {
     inputData: function() {
-      return runSearch(this.msg, this.url);
-    }
-  }
+      return runsearch(this.msg, this.url);
+    },
+  },
 }
 </script>
 

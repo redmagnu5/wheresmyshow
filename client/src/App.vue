@@ -2,29 +2,27 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-on:keyup.enter="Search" v-model="message" placeholder="Search Movies, TV, Film..">
+      <input v-on:keyup="Search" v-model="message" placeholder="Search Movies, TV, Film..">
     </div>
-    <p>{{ theData }}</p>
+    <Results v-bind:searchData = "searchData" />
   </div>
 </template>
 
 <script>
-//import child from './components/child.vue'
+import Results from './components/Results.vue'
 let baseURL = 'https://api.themoviedb.org/3/';
 let APIKEY = "45d8067615f09095c8d918479844088c";
 
 export default {
   name: 'App',
   components: {
-    //child
+    Results,
   },
 
   data() {
     return {
+      searchData: [],
       message: "",
-      //export search data to child components
-      searchData: "",
-      url: baseURL,
     }
   },
   methods: {
@@ -33,19 +31,13 @@ export default {
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
-        var responseString = JSON.stringify(responseData, null, 4);
-        this.searchData = responseString;
-        //Successfully returning searchdata into instance variable, no need for next line
-        document.getElementById('output').innerHTML = JSON.stringify(responseString, null, 4);
+        this.searchData = responseData;
+        console.log(responseData);
       })
       .catch(error => console.warn(error));
     }
+    //searchData must be initialized before search
   },
-  computed: {
-    theData: function() {
-      return this.searchData;
-    }
-  }
 }
 </script>
 

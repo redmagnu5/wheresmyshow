@@ -2,14 +2,14 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-on:keyup="Search" v-model="message" placeholder="Search Movies, TV, Film..">
+      <input v-on:keyup="Search" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
     <Results v-bind:searchData = "searchData" />
   </div>
 </template>
 
 <script>
-import Results from './components/Results.vue'
+import Results from './components/Results.vue';
 let baseURL = 'https://api.themoviedb.org/3/';
 let APIKEY = "45d8067615f09095c8d918479844088c";
 
@@ -21,13 +21,13 @@ export default {
 
   data() {
     return {
-      searchData: [],
-      message: "",
+      searchData: "",
+      input: "",
     }
   },
   methods: {
     Search: function runsearch() {
-      let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.message);
+      let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.input);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
@@ -36,7 +36,6 @@ export default {
       })
       .catch(error => console.warn(error));
     }
-    //searchData must be initialized before search
   },
 }
 </script>

@@ -21,22 +21,35 @@ export default {
 
   data() {
     return {
-      searchData: "",
+      searchData: null,
       input: "",
+      searchDetails: null,
     }
   },
   methods: {
-    Search: function runsearch() {
+    Search: function multiSearch() {
       let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.input);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
         this.searchData = responseData;
+        //console.log(responseData);
+      })
+      .catch(error => console.warn(error));
+    },
+    detailsSearch: function detailSearch(ID) {
+      let url = ''.concat(baseURL, '/movie/', ID, '?api_key=', APIKEY);
+      return fetch(url)
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.searchDetails = responseData;
         console.log(responseData);
       })
       .catch(error => console.warn(error));
     }
   },
+  mounted() {
+  }
 }
 </script>
 

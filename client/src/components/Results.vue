@@ -1,7 +1,8 @@
 <template>
-  <div id="test">
+  <div id="test" v-if="searchData">
     <p> {{searchData.results[0].name || searchData.results[0].title}} </p>
     <p> {{ searchData.results[0].overview }} </p>
+    <p> {{ searchData.results[0].first_air_date || searchData.results[0].release_date }}</p>
   </div>
 </template>
 
@@ -13,10 +14,12 @@ export default {
     searchData: {
       required: true,
     },
+    searchID: {
+
+    },
   },
   data() {
     return {
-      overview: "",
       Title: "",
     }
   },

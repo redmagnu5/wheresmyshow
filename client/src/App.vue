@@ -4,7 +4,7 @@
     <div class="">
       <input v-on:keyup="Search" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
-    <Results v-bind:searchData = "searchData" />
+    <Results v-bind:searchData = "searchData" v-bind:searchDetails="Details"/>
   </div>
 </template>
 
@@ -33,12 +33,13 @@ export default {
       .then((response) => response.json())
       .then((responseData) => {
         this.searchData = responseData;
-        //console.log(responseData);
+        console.log(responseData);
       })
       .catch(error => console.warn(error));
     },
     detailsSearch: function detailSearch(ID) {
-      let url = ''.concat(baseURL, '/movie/', ID, '?api_key=', APIKEY);
+      let url = ''.concat(baseURL, 'tv/', ID, '?api_key=', APIKEY);
+      console.log(url);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
@@ -49,6 +50,15 @@ export default {
     }
   },
   mounted() {
+  },
+  computed: {
+    Details: function() {
+      if (this.searchData == null) {
+        return "";
+      } else {
+        return this.detailsSearch(this.searchData.results[0].id);
+      }
+    }
   }
 }
 </script>

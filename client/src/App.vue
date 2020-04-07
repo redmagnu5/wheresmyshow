@@ -4,7 +4,7 @@
     <div class="">
       <input v-on:keyup="Search" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
-    <Results v-bind:searchData = "searchData" v-bind:searchDetails="Details"/>
+    <Results v-bind:searchData = "SearchInfo" v-bind:searchDetails="Details"/>
   </div>
 </template>
 
@@ -33,18 +33,18 @@ export default {
       .then((response) => response.json())
       .then((responseData) => {
         this.searchData = responseData;
-        console.log(responseData);
+        //console.log(responseData);
       })
       .catch(error => console.warn(error));
     },
     detailsSearch: function detailSearch(ID) {
       let url = ''.concat(baseURL, 'tv/', ID, '?api_key=', APIKEY);
-      console.log(url);
+      //console.log(url);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
         this.searchDetails = responseData;
-        console.log(responseData);
+        //console.log(this.searchDetails);
       })
       .catch(error => console.warn(error));
     }
@@ -53,10 +53,20 @@ export default {
   },
   computed: {
     Details: function() {
-      if (this.searchData == null) {
-        return "";
+      if (this.searchData == null || this.searchData == 'undefined') {
+        this.searchDetails == {networks: ""};
+        return this.searchDetails;
       } else {
-        return this.detailsSearch(this.searchData.results[0].id);
+        this.detailsSearch(this.searchData.results[0].id);
+        return this.searchDetails;
+      }
+    },
+    SearchInfo: function() {
+      if (this.searchData == null || this.searchData == 'undefined') {
+        this.searchData == {results: "Nothing Yet"};
+        return this.searchData;
+      } else {
+        return this.searchData;
       }
     }
   }

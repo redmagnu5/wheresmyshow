@@ -2,7 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-on:keyup="Search" v-model="input" placeholder="Search Movies, TV, Film..">
+      <input v-on:keyup.enter="Search" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
     <Results v-bind:searchData = "SearchInfo" v-bind:searchDetails="Details"/>
   </div>
@@ -27,6 +27,7 @@ export default {
     }
   },
   methods: {
+    //add method for querying movie details
     Search: function multiSearch() {
       let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.input);
       return fetch(url)
@@ -37,8 +38,19 @@ export default {
       })
       .catch(error => console.warn(error));
     },
-    detailsSearch: function detailSearch(ID) {
+    TvDetails: function tvDetails(ID) {
       let url = ''.concat(baseURL, 'tv/', ID, '?api_key=', APIKEY);
+      console.log(url);
+      return fetch(url)
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.searchDetails = responseData;
+        //console.log(this.searchDetails);
+      })
+      .catch(error => console.warn(error));
+    },
+    MovieDetails: function movieDetails(ID) {
+      let url = ''.concat(baseURL, 'movie/', ID, '?api_key=', APIKEY);
       //console.log(url);
       return fetch(url)
       .then((response) => response.json())
@@ -52,13 +64,19 @@ export default {
   mounted() {
   },
   computed: {
+    // correctly returns the right request, but spams them. Not sure why
     Details: function() {
       if (this.searchData == null || this.searchData == 'undefined') {
-        this.searchDetails == {networks: ""};
+        this.searchDetails == "";
+        return this.searchDetails;
+      } else if (this.searchData.results[0].media_type == 'tv') {
+        this.TvDetails(this.searchData.results[0].id);
+        return this.searchDetails;
+      } else if (this.searchData.results[0].media_type == 'movie'){
+        this.MovieDetails(this.searchData.results[0].id);
         return this.searchDetails;
       } else {
-        this.detailsSearch(this.searchData.results[0].id);
-        return this.searchDetails;
+        return "";
       }
     },
     SearchInfo: function() {

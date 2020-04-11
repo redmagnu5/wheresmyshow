@@ -2,9 +2,9 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-on:keyup.enter="Search" v-model="input" placeholder="Search Movies, TV, Film..">
+      <input v-on:keyup="Search" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
-    <Results v-bind:searchData = "SearchInfo" v-bind:searchDetails="Details"/>
+    <Results v-bind:searchData = "SearchInfo" v-bind:searchDetails="SearchDetails"/>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
     }
   },
   methods: {
-    //add method for querying movie details
+    //change to tv search only
     Search: function multiSearch() {
       let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.input);
       return fetch(url)
@@ -40,7 +40,7 @@ export default {
     },
     TvDetails: function tvDetails(ID) {
       let url = ''.concat(baseURL, 'tv/', ID, '?api_key=', APIKEY);
-      console.log(url);
+      //console.log(url);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
@@ -56,10 +56,10 @@ export default {
       .then((response) => response.json())
       .then((responseData) => {
         this.searchDetails = responseData;
-        //console.log(this.searchDetails);
+        console.log(this.searchDetails);
       })
       .catch(error => console.warn(error));
-    }
+    },
   },
   mounted() {
   },
@@ -85,6 +85,15 @@ export default {
         return this.searchData;
       } else {
         return this.searchData;
+      }
+    },
+    SearchDetails: function() {
+      if (this.searchData == null || this.searchData == 'undefined') {
+        this.searchData == {results: "Nothing Yet"};
+        return this.searchDetails;
+      } else {
+        this.TvDetails(this.searchData.results[0].id);
+        return this.searchDetails;
       }
     }
   }

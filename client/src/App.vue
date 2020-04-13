@@ -4,7 +4,7 @@
     <div class="">
       <input v-on:keyup="Search" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
-    <Results v-bind:searchData = "SearchInfo" v-bind:searchDetails="SearchDetails"/>
+    <Results v-if="searchData != null" v-bind:searchData = "searchData" v-bind:searchDetails="Details"/>
   </div>
 </template>
 
@@ -22,21 +22,25 @@ export default {
   data() {
     return {
       searchData: null,
-      input: "",
+      input: null,
       searchDetails: null,
     }
   },
   methods: {
-    //change to tv search only
+    //Search now only being called while there is input, but performance is bad due to spamming requests
     Search: function multiSearch() {
       let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.input);
-      return fetch(url)
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.searchData = responseData;
-        //console.log(responseData);
-      })
-      .catch(error => console.warn(error));
+      if (this.input == null) {
+        return null;
+      } else {
+        return fetch(url)
+        .then((response) => response.json())
+        .then((responseData) => {
+          this.searchData = responseData;
+          //console.log(responseData);
+        })
+        .catch(error => console.warn(error));
+      }
     },
     TvDetails: function tvDetails(ID) {
       let url = ''.concat(baseURL, 'tv/', ID, '?api_key=', APIKEY);
@@ -45,7 +49,7 @@ export default {
       .then((response) => response.json())
       .then((responseData) => {
         this.searchDetails = responseData;
-        //console.log(this.searchDetails);
+        console.log(this.searchDetails);
       })
       .catch(error => console.warn(error));
     },
@@ -62,9 +66,9 @@ export default {
     },
   },
   mounted() {
+
   },
   computed: {
-    // correctly returns the right request, but spams them. Not sure why
     Details: function() {
       if (this.searchData == null || this.searchData == 'undefined') {
         this.searchDetails == "";
@@ -88,13 +92,8 @@ export default {
       }
     },
     SearchDetails: function() {
-      if (this.searchData == null || this.searchData == 'undefined') {
-        this.searchData == {results: "Nothing Yet"};
-        return this.searchDetails;
-      } else {
-        this.TvDetails(this.searchData.results[0].id);
-        return this.searchDetails;
-      }
+      this.TvDetails(this.searchData.results[0].id);
+      return this.searchDetails;
     }
   }
 }

@@ -2,7 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-on:keyup="Search" v-model="input" placeholder="Search Movies, TV, Film..">
+      <input v-on:keyup.capture="Search" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
     <Results v-if="searchData != null" v-bind:searchData = "searchData" v-bind:searchDetails="Details"/>
   </div>
@@ -24,10 +24,10 @@ export default {
       searchData: null,
       input: null,
       searchDetails: null,
+      counter: null,
     }
   },
   methods: {
-    //Search now only being called while there is input, but performance is bad due to spamming requests
     Search: function multiSearch() {
       let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.input);
       if (this.input == null) {
@@ -37,7 +37,7 @@ export default {
         .then((response) => response.json())
         .then((responseData) => {
           this.searchData = responseData;
-          //console.log(responseData);
+          console.log(this.searchData);
         })
         .catch(error => console.warn(error));
       }
@@ -49,7 +49,7 @@ export default {
       .then((response) => response.json())
       .then((responseData) => {
         this.searchDetails = responseData;
-        console.log(this.searchDetails);
+        //console.log(this.searchDetails);
       })
       .catch(error => console.warn(error));
     },
@@ -60,7 +60,7 @@ export default {
       .then((response) => response.json())
       .then((responseData) => {
         this.searchDetails = responseData;
-        console.log(this.searchDetails);
+        //console.log(this.searchDetails);
       })
       .catch(error => console.warn(error));
     },

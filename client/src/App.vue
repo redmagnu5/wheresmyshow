@@ -2,7 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-on:keyup.capture="Search" v-model="input" placeholder="Search Movies, TV, Film..">
+      <input v-on:keyup.capture="Search('3166-2:UM')" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
     <Results v-if="searchData != null" v-bind:searchData = "searchData" v-bind:searchDetails="Details"/>
   </div>
@@ -28,8 +28,8 @@ export default {
     }
   },
   methods: {
-    Search: function multiSearch() {
-      let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&query=', this.input);
+    Search: function multiSearch(REGION) {
+      let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&region=', REGION, '&query=', encodeURIComponent(this.input));
       if (this.input == null) {
         return null;
       } else {
@@ -38,13 +38,14 @@ export default {
         .then((responseData) => {
           this.searchData = responseData;
           console.log(this.searchData);
+          console.log(url);
         })
         .catch(error => console.warn(error));
       }
     },
     TvDetails: function tvDetails(ID) {
       let url = ''.concat(baseURL, 'tv/', ID, '?api_key=', APIKEY);
-      //console.log(url);
+      console.log(url);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
@@ -55,7 +56,7 @@ export default {
     },
     MovieDetails: function movieDetails(ID) {
       let url = ''.concat(baseURL, 'movie/', ID, '?api_key=', APIKEY);
-      //console.log(url);
+      console.log(url);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
@@ -69,6 +70,7 @@ export default {
 
   },
   computed: {
+    //calls indefinitely, and returns undesirable network. Add query to main site
     Details: function() {
       if (this.searchData == null || this.searchData == 'undefined') {
         this.searchDetails == "";
@@ -80,21 +82,9 @@ export default {
         this.MovieDetails(this.searchData.results[0].id);
         return this.searchDetails;
       } else {
-        return "";
+        return this.searchDetails;
       }
     },
-    SearchInfo: function() {
-      if (this.searchData == null || this.searchData == 'undefined') {
-        this.searchData == {results: "Nothing Yet"};
-        return this.searchData;
-      } else {
-        return this.searchData;
-      }
-    },
-    SearchDetails: function() {
-      this.TvDetails(this.searchData.results[0].id);
-      return this.searchDetails;
-    }
   }
 }
 </script>

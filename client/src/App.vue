@@ -2,9 +2,9 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <div class="">
-      <input v-on:keyup.capture="Search('3166-2:UM')" v-model="input" placeholder="Search Movies, TV, Film..">
+      <input v-on:keyup.capture="Search('3166-2:UM'), Details" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
-    <Results v-if="searchData != null" v-bind:searchData = "searchData" v-bind:searchDetails="Details"/>
+    <Results v-if="searchData != null" v-bind:searchData = "searchData" v-bind:searchDetails="searchDetails"/>
   </div>
 </template>
 
@@ -70,7 +70,7 @@ export default {
 
   },
   computed: {
-    //calls indefinitely, and returns undesirable network. Add query to main site
+    //scrape html from moviedb to show streaming networks
     Details: function() {
       if (this.searchData == null || this.searchData == 'undefined') {
         this.searchDetails == "";

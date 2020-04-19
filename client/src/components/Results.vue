@@ -8,8 +8,6 @@
 </template>
 
 <script>
-let baseURL = "https://www.themoviedb.org/";
-
 
 export default {
   name: 'Results',

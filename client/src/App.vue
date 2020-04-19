@@ -11,7 +11,7 @@
 <script>
 import Results from './components/Results.vue';
 let baseURL = 'https://api.themoviedb.org/3/';
-let APIKEY = "45d8067615f09095c8d918479844088c";
+let APIKEY = process.env.VUE_APP_API_KEY;
 let streamURL = "https://www.themoviedb.org/";
 
 export default {
@@ -89,7 +89,6 @@ export default {
         this.searchDetails == "";
         return this.searchDetails;
       } else if (this.searchData.results[0].media_type == 'tv') {
-        this.TvDetails(showID);
         this.StreamDetails(showID);
         return this.searchDetails;
       } else if (this.searchData.results[0].media_type == 'movie'){

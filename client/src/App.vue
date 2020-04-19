@@ -4,7 +4,7 @@
     <div class="">
       <input v-on:keyup.capture="Search('3166-2:UM'), Details" v-model="input" placeholder="Search Movies, TV, Film..">
     </div>
-    <Results v-if="searchData != null" v-bind:searchData = "searchData" v-bind:searchDetails="searchDetails"/>
+    <Results v-if="searchData != null" v-bind:searchData = "searchData"/>
   </div>
 </template>
 
@@ -12,6 +12,7 @@
 import Results from './components/Results.vue';
 let baseURL = 'https://api.themoviedb.org/3/';
 let APIKEY = "45d8067615f09095c8d918479844088c";
+let streamURL = "https://www.themoviedb.org/";
 
 export default {
   name: 'App',
@@ -23,13 +24,13 @@ export default {
     return {
       searchData: null,
       input: null,
+      streamDetails: null,
       searchDetails: null,
-      counter: null,
     }
   },
   methods: {
-    Search: function multiSearch(REGION) {
-      let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&region=', REGION, '&query=', encodeURIComponent(this.input));
+    Search: function multiSearch(region) {
+      let url = ''.concat(baseURL, 'search/multi?api_key=', APIKEY, '&region=', region, '&query=', encodeURIComponent(this.input));
       if (this.input == null) {
         return null;
       } else {
@@ -37,15 +38,15 @@ export default {
         .then((response) => response.json())
         .then((responseData) => {
           this.searchData = responseData;
-          console.log(this.searchData);
-          console.log(url);
+          //console.log(this.searchData);
+          //console.log(url);
         })
         .catch(error => console.warn(error));
       }
     },
     TvDetails: function tvDetails(ID) {
       let url = ''.concat(baseURL, 'tv/', ID, '?api_key=', APIKEY);
-      console.log(url);
+      //console.log(url);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
@@ -56,12 +57,23 @@ export default {
     },
     MovieDetails: function movieDetails(ID) {
       let url = ''.concat(baseURL, 'movie/', ID, '?api_key=', APIKEY);
-      console.log(url);
+      //console.log(url);
       return fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
         this.searchDetails = responseData;
         //console.log(this.searchDetails);
+      })
+      .catch(error => console.warn(error));
+    },
+    StreamDetails: function streamTVDetails(id) {
+      let url = ''.concat(streamURL, 'tv/', id, '/watch');
+      console.log(url);
+      return fetch(url)
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.streamDetails = responseData;
+        console.log(this.streamDetails);
       })
       .catch(error => console.warn(error));
     },
@@ -72,14 +84,16 @@ export default {
   computed: {
     //scrape html from moviedb to show streaming networks
     Details: function() {
+      var showID = this.searchData.results[0].id;
       if (this.searchData == null || this.searchData == 'undefined') {
         this.searchDetails == "";
         return this.searchDetails;
       } else if (this.searchData.results[0].media_type == 'tv') {
-        this.TvDetails(this.searchData.results[0].id);
+        this.TvDetails(showID);
+        this.StreamDetails(showID);
         return this.searchDetails;
       } else if (this.searchData.results[0].media_type == 'movie'){
-        this.MovieDetails(this.searchData.results[0].id);
+        this.MovieDetails(showID);
         return this.searchDetails;
       } else {
         return this.searchDetails;

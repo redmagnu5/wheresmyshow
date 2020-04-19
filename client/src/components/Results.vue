@@ -3,29 +3,34 @@
     <p> {{searchData.results[0].name || searchData.results[0].title}} </p>
     <p> {{ searchData.results[0].overview }} </p>
     <p> {{ searchData.results[0].first_air_date || searchData.results[0].release_date }}</p>
-    <p v-if="searchData.results[0].media_type == 'tv'"> {{ searchDetails.networks[0].name }}</p>
 
   </div>
 </template>
 
 <script>
+let baseURL = "https://www.themoviedb.org/";
+
+
 export default {
   name: 'Results',
   props: {
     searchData: {
       required: true,
     },
-    searchDetails: {
+    streamDetails: {
 
     },
   },
   data() {
     return {
-      Title: "",
     }
   },
   computed: {
+
   },
+  methods: {
+
+  }
 }
 </script>
 

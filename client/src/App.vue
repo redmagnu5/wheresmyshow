@@ -9,23 +9,15 @@
       <div class="carousel-inner" role="listbox">
         <!-- Slide One - Set the background image for this slide in the line below -->
         <div class="carousel-item active" >
-          <div class="carousel-caption d-none d-md-block">
-            <h2 class="display-4">First Slide</h2>
-            <p class="lead">This is a description for the first slide.</p>
-          </div>
+
         </div>
       </div>
-      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
+
     </div>
   </header>
   <div class="container">
+    <br />
+    <br />
     <br />
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8">
@@ -45,12 +37,17 @@
       <!--end of col-->
     </div>
   </div>
+  <br />
+  <br />
+  <NoResults v-if="!searchData" />
   <Results v-if="searchData" v-bind:searchData="searchData" v-bind:searchDetails="searchDetails"/>
+
 </div>
 </template>
 
 <script>
 import Results from './components/Results.vue';
+import NoResults from './components/Noresults.vue';
 let baseURL = 'https://api.themoviedb.org/3/';
 let APIKEY = process.env.VUE_APP_API_KEY;
 let streamURL = "https://www.themoviedb.org/";
@@ -59,6 +56,7 @@ export default {
   name: 'App',
   components: {
     Results,
+    NoResults,
   },
 
   data() {
@@ -150,7 +148,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 80px;
+  margin-top: 0px;
 }
 
 .form-control-borderless {
@@ -165,7 +163,7 @@ export default {
   box-shadow: none;
 }
 .carousel-item {
-  height: 100vh;
+  height: 40vh;
   min-height: 100px;
   background: no-repeat center center scroll;
   -webkit-background-size: cover;
@@ -175,7 +173,7 @@ export default {
   background-image: url('assets/banner.png');
 }
 section {
-  padding-top: 5rem;
+  padding-top: 0rem;
   padding-bottom: 5rem;
 }
 

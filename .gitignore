@@ -2,3 +2,4 @@ env
 node-env
 dev.sh
 node_modules
+server

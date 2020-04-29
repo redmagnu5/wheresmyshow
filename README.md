@@ -23,7 +23,7 @@ Built using themoviedb: https://www.themoviedb.org/documentation/api
 
 ## Demonstration
 
-[Screenshot]: https://github.com/redmagnu5/wheresmyshow/client/src/assets/page_screenshot.png
+[Screenshot]: https://github.com/redmagnu5/wheresmyshow/blob/master/client/src/assets/page_screenshot.png
 
 ![alt text][Screenshot]
 
